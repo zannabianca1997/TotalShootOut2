@@ -1,5 +1,6 @@
 # Main starting file of the program
-
-print("Hello world!!!1!1")
-
-import bin.client
+from bin.start_ui import Ui as StartUi
+#create the start Ui
+start_ui = StartUi()
+#start the program
+start_ui.show()
