@@ -4,4 +4,4 @@ print("Loading interface...")
 __all__ = ["cli"]
 
 #using cli
-from bin.start_ui.cli import Cli as Ui
+from .cli import Cli as Ui

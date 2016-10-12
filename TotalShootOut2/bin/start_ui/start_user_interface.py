@@ -1,5 +1,5 @@
-from ..client.client_setups import client_setups
-from ..server.server_setups import server_setups
+from client.client_setups import client_setups
+from server.server_setups import server_setups
 
 
 class StartUi:
