@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from .start_user_interface import StartUi
 import setups
 
