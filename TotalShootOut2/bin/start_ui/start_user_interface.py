@@ -1,9 +1,15 @@
 from client.client_setups import client_setups
 from server.server_setups import server_setups
+import setups
 
 
 class StartUi:
     """A class representing the start screen"""
+
+    def __init__(self):
+        """inizialize the Ui"""
+        super().__init__()
+        self.start_screen_data = setups.data.startup.start_screen
 
     def show(self):
         "open the ui"

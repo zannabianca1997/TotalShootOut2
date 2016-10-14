@@ -2,7 +2,7 @@
 
 # logging system
 import logging
-logging.basicConfig(level = logging.DEBUG)
+logging.basicConfig(level = logging.DEBUG,filename="out.log")
 
 #for dir navigation
 from os import path
