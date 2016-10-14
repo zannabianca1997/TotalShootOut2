@@ -1,5 +1,5 @@
+#!/usr/bin/env python3
 # Main starting file of the program
-
 
 #for finding modules navigation
 from os import path
