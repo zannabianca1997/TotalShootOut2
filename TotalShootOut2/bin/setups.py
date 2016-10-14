@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import logging
 logger = logging.getLogger(__name__.upper())
 
@@ -47,7 +48,7 @@ def _mount_paths(prj_path):
     logger.info("Loading paths...")
     bin_path = os.path.join(prj_path, "bin")
     ass_path = os.path.join(prj_path, "assets")
-    jsn_path = os.path.join(ass_path, "json")
+    jsn_path = os.path.join(ass_path, "data")
     spr_path = os.path.join(ass_path, "sprite")
     global paths
     paths = {

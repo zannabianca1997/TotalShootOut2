@@ -1,11 +1,19 @@
+# -*- coding: utf-8 -*-
 # Main starting file of the program
+
+
+#for finding modules navigation
+from os import path
+import sys
+#find dir
+prj_dir = path.dirname(path.realpath(__file__))
+sys.path.append(path.join(prj_dir, "bin"))
+
 
 # logging system
 import logging
 logging.basicConfig(level = logging.DEBUG,filename="out.log")
 
-#for dir navigation
-from os import path
 #read the setups
 import setups
 # import the ui
@@ -13,8 +21,6 @@ from start_ui import Ui as StartUi
 
 def main():
     """The main program course"""
-    #find dir
-    prj_dir = path.dirname(path.realpath(__file__))
 
     #load setups
     setups.load(prj_dir)
