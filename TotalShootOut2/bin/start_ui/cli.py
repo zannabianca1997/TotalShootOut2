@@ -17,7 +17,7 @@ class Cli(StartUi):
         "open a start screen"
         size = self._get_terminal_size()
         # todo: change with a paths class
-        data = json.load(open("assets/json/startup/start_screen.json"))
+        data = json.load(open("assets/data/startup/start_screen.data"))
         # Printing
         print(data["content"]["title"].upper().center(size.columns))
         print()

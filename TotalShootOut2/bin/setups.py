@@ -2,7 +2,8 @@ import logging
 logger = logging.getLogger(__name__.upper())
 
 import os
-import json as js
+import json
+import pprint
 
 class _BunchDict(dict):
     """This dict can be called with both ["item"] and .item notation"""
@@ -29,21 +30,20 @@ class _BunchDict(dict):
         return value
 
 
-json = None
+data = None
 paths = None
 
-def load_all(prj_path):
+def load(prj_path):
     "Load all setups. Receive the project path as argument"
     logger.info("Loading setups...")
     #create paths dictionary
     _mount_paths(prj_path)
     #load all jsons
-    _load_jsons()
+    _load_setups()
 
 
 def _mount_paths(prj_path):
     "Create paths dict"
-    #todo:this should be read from file
     logger.info("Loading paths...")
     bin_path = os.path.join(prj_path, "bin")
     ass_path = os.path.join(prj_path, "assets")
@@ -53,17 +53,17 @@ def _mount_paths(prj_path):
     paths = {
         "bin": bin_path,
         "assets": ass_path,
-        "json": jsn_path,
+        "data": jsn_path,
         "sprite": spr_path
     }
-    logger.debug("Setted paths:\n   %s" , ", \n    ".join(str(paths).split(", ")))
+    logger.debug("Setted paths:\n%s" , pprint.pformat(paths))
 
-def _load_jsons():
-    "loads all files from json directory"
+def _load_setups():
+    "loads all files from data directory"
     logger.info("Loading jsons...")
-    global json
-    json = _load_dir(paths["json"]) #loading the path
-    logger.debug("Loaded data: %s",str(json))
+    global data
+    data = _load_dir(paths["data"]) #loading the path
+    logger.debug("Loaded data:\n%s", pprint.pformat(data))
 
 
 def _load_dir(dir):
@@ -73,17 +73,24 @@ def _load_dir(dir):
     for name in os.listdir(dir):
         file = os.path.join(dir, name)
         if os.path.isfile(file):
-            result[name] = _load_file(file)
+            name_parts = name.split('.')
+            if len(name_parts)>2:
+                name_parts=["_".join(name_parts[:-1]),name_parts[-1]]
+                logger.warn("Duble dots in %s. Will be saved as %s",file,name_parts[0])
+            if name_parts[1]=="json": #can be added support to multiple file types
+                result[name_parts[0]] = _load_json(file)
+            else:
+                logger.info("Ignored unknown file type %s: %s",name_parts[1],file)
         elif os.path.isdir(file):
             result[name] = _load_dir(file)
     return _BunchDict(result)
 
-def _load_file(file):
+def _load_json(file):
     "load a file in the memory"
     logger.debug("Loading %s", file)
     try:
         with open(file, "r") as f:
-            data = js.load(f)
+            data = json.load(f)
             return _BunchDict(data)
     except ValueError as e:
         logger.exception("Problem in decoding %s:", file.name)
@@ -91,6 +98,6 @@ def _load_file(file):
     except IOError as e:
         logger.exception("Problem in reading %s:", file.name)
         return e #comunque il gioco contimua, forse ci si salva
-    except Exception
+    except Exception:
         logger.exception("Unknow exception in IO with %s", file.name)
         raise #non sappiamo che è, reinviamo
