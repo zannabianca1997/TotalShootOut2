@@ -1,3 +1,5 @@
 {
-  "developers": ["Giuseppe Zanichelli", "Flavio Ascari"]
+  "credit": {
+    "developers": [ "Giuseppe Zanichelli" ]
+  }
 }

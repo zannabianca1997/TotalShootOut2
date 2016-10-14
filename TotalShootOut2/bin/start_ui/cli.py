@@ -22,7 +22,9 @@ class Cli(StartUi):
         print()
         for line in self.start_screen_data.content.subtitles:
             print(line.center(size.columns))
-        # todo: print authors from package file
+        print()
+        for type, names in setups.data.general.credit.items():
+            print("{}: {}".format(type,", ".join(names)))
         time.sleep(self.start_screen_data.time)
 
 
