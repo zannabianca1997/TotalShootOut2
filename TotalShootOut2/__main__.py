@@ -6,12 +6,11 @@ from os import path, getcwd, chdir
 import logging, sys
 #read the setups
 import setups
-# import the ui
-from start_ui import Ui as StartUi
 
 def main():
     """The main program course"""
     #logging start
+    logging.basicConfig(level = logging.DEBUG)
 
     #find dir
     prj_dir = path.dirname(path.realpath(__file__))
@@ -20,6 +19,8 @@ def main():
     setups.load_all(prj_dir)
 
     # create the start Ui
+    # import the ui
+    from start_ui import Ui as StartUi
     start_ui = StartUi()
     # start the program
     start_ui.show()
