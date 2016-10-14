@@ -2,9 +2,14 @@ import os, logging
 logger = logging.getLogger(__name__.upper())
 
 class BunchDict(dict):
-    def __init__(self,**kw):
-        dict.__init__(self,kw)
-        self.__dict__.update(kw)
+    def __init__(self,kw):
+        super().__init__()
+        for (key, value) in kw.items():
+            if issubclass(type(value),dict):
+                value = BunchDict(value) #itero la transformazione
+            self[key] = value
+            self.__dict__[key] = value
+
 
 json = None
 paths = None
@@ -34,15 +39,20 @@ def mount_paths(prj_path):
 
 def load_jsons():
     logger.info("Loading jsons...")
-    set_path = paths["json"]
     global json
-    json = rec_load_jsons(set_path)
+    json = load_dir(paths["json"]) #loading the path
 
 
-def rec_load_jsons(set_path):
-    for f in os.listdir(set_path):
-        f = os.path.join(set_path, f)
-        if os.path.isfile(f):
-            print("file", f)
-        elif os.path.isdir(f):
-            print("dir", f)
+def load_dir(dir):
+    result = dict()
+    logger.debug("Navigating %s...", dir)
+    for name in os.listdir(dir):
+        file = os.path.join(dir, name)
+        if os.path.isfile(file):
+            result[name] = load_file(file)
+        elif os.path.isdir(file):
+            result[name] = load_dir(file)
+    return BunchDict(result)
+
+def load_file(file):
+    logger.debug("Loading %s", file)
