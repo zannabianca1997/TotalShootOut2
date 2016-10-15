@@ -1,5 +1,5 @@
 import logging
-logger = logging.getLogger(__name__.upper())
+import logging.config
 
 import os
 import json
@@ -17,7 +17,7 @@ class _BunchDict(dict):
             if key.find(".") == -1: #no dots in name
                 self.__dict__[key] = value
             else:
-                logger.warn("Ignored dotted key '%s'",key)
+                logging.getLogger(__name__).warn("Ignored dotted key '%s'",key)
             self[key] = value
 
     def recursive_bunching(self, value):
@@ -35,39 +35,50 @@ paths = None
 
 def load(prj_path):
     "Load all setups. Receive the project path as argument"
+    logger = logging.getLogger(__name__)
     logger.info("Loading setups...")
     #create paths dictionary
     _mount_paths(prj_path)
     #load all jsons
     _load_setups()
+    #new logging!!!
+    logging.config.dictConfig(data.logging)
+    logger = logging.getLogger(__name__)
+    logger.info("New logging from now on")
+    logger.debug("Loaded data:\n%s", pprint.pformat(data))
 
 
 def _mount_paths(prj_path):
     "Create paths dict"
+    logger = logging.getLogger(__name__)
     logger.info("Loading paths...")
     bin_path = os.path.join(prj_path, "bin")
     ass_path = os.path.join(prj_path, "assets")
     jsn_path = os.path.join(ass_path, "data")
     spr_path = os.path.join(ass_path, "sprite")
+    log_path = os.path.join(ass_path, "log")
     global paths
     paths = {
         "bin": bin_path,
         "assets": ass_path,
         "data": jsn_path,
-        "sprite": spr_path
+        "sprite": spr_path,
+        "log": log_path
     }
     logger.debug("Setted paths:\n%s" , pprint.pformat(paths))
 
 def _load_setups():
     "loads all files from data directory"
+    logger = logging.getLogger(__name__)
     logger.info("Loading jsons...")
     global data
     data = _load_dir(paths["data"]) #loading the path
-    logger.debug("Loaded data:\n%s", pprint.pformat(data))
+
 
 
 def _load_dir(dir):
     "load all file and subdir in the memory"
+    logger = logging.getLogger(__name__)
     result = dict()
     logger.debug("Navigating %s...", dir)
     for name in os.listdir(dir):
@@ -87,17 +98,18 @@ def _load_dir(dir):
 
 def _load_json(file):
     "load a file in the memory"
+    logger = logging.getLogger(__name__)
     logger.debug("Loading %s", file)
     try:
         with open(file, "r") as f:
             data = json.load(f)
             return _BunchDict(data)
     except ValueError as e:
-        logger.exception("Problem in decoding %s:", file.name)
+        logger.exception("Problem in decoding %s:", file)
         return e #comunque il gioco contimua, forse ci si salva
     except IOError as e:
-        logger.exception("Problem in reading %s:", file.name)
+        logger.exception("Problem in reading %s:", file)
         return e #comunque il gioco contimua, forse ci si salva
     except Exception:
-        logger.exception("Unknow exception in IO with %s", file.name)
+        logger.exception("Unknow exception in IO with %s", file)
         raise #non sappiamo che è, reinviamo

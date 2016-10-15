@@ -2,6 +2,8 @@ from client.client_setups import client_setups
 from server.server_setups import server_setups
 import setups
 
+import logging
+
 
 class StartUi:
     """A class representing the start screen"""
@@ -13,10 +15,15 @@ class StartUi:
 
     def show(self):
         "open the ui"
+        logger = logging.getLogger(__name__)
+        logger.info("Opening start screen")
         self._start_screen()
+        logger.info("Asking if server")
         if self._ask_if_server():
+            logger.info("Server was choosed")
             self._launch_server()
         else:
+            logger.info("Client was choosed")
             self._launch_client()
 
     # do the stuffs

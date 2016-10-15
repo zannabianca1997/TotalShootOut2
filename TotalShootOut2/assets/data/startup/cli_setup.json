@@ -1,3 +1,13 @@
 {
-  "default_terminal":[80, 20]
+  "default_terminal": [
+    80,
+    20
+  ],
+  "ask_server": {
+    "message": "Do you want this instance to be a server or a client?",
+    "options": [
+      "s",
+      "c"
+    ]
+  }
 }

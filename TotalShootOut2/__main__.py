@@ -1,37 +1,67 @@
 #!/usr/bin/env python3
 # Main starting file of the program
 
-#for finding modules navigation
-from os import path
-import sys
-#find dir
-prj_dir = path.dirname(path.realpath(__file__))
-sys.path.append(path.join(prj_dir, "bin"))
-
-
 # logging system
 import logging
-logging.basicConfig(level = logging.DEBUG,filename="out.log")
+#for finding modules navigation
+from os import path
+import sys, pprint
 
-#read the setups
-import setups
-# import the ui
-from start_ui import Ui as StartUi
 
 def main():
     """The main program course"""
+    #start logging
+    start_logging()
+    #setup pypath
+    set_pypath() #now i can refere to local modules
+    #load the setups
+    load_setups()
+    try:
+        # create the start Ui
+        start_ui = create_start_ui()
+        # start the program
+        start_ui.show()
+    except Exception:
+        logging.getLogger(__name__).exception(
+            "An exception has been raised from the game, and not stopped"
+        )
+    finally:
+        # stop the logging
+        logging.getLogger(__name__).info("Logging End")
+        logging.shutdown()
 
-    #load setups
+
+
+
+def start_logging():
+    logging.basicConfig(level = logging.DEBUG)
+    #the logging will be finer after the setups will be read
+
+def set_pypath():
+    """Add project dir to pypath"""
+    logger = logging.getLogger(__name__)
+    #find dir
+    global prj_dir #all accessible
+    prj_dir = path.dirname(path.realpath(__file__))
+    logger.info("Project localized in %s", prj_dir)
+    sys.path.insert(0, path.join(prj_dir, "bin"))
+    logger.debug("Actual PYTHONPATH:\n%s", pprint.pformat(sys.path))
+
+def load_setups():
+    "read the setups"
+    logger = logging.getLogger(__name__)
+    import setups
+    global setups
+    logger.info("Loading setups")
     setups.load(prj_dir)
 
-    # create the start Ui
+def create_start_ui():
+    logger = logging.getLogger(__name__)
+    logger.debug("Creating StartUi")
+    # import the ui
+    from start_ui import Ui as StartUi
     start_ui = StartUi()
-    # start the program
-    start_ui.show()
-
-    # stop the logging
-    logging.shutdown()
-
+    return start_ui
 
 if __name__ == '__main__':
     main()
