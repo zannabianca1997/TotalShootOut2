@@ -12,18 +12,22 @@
     "console": {
       "class": "logging.StreamHandler",
       "level": "WARNING",
-      "formatter":"simple",
+      "formatter": "simple",
       "stream": "ext://sys.stderr"
     },
     "file": {
       "class": "logging.FileHandler",
-      "level": "DEBUG",
-      "formatter":"detailed",
+      "formatter": "detailed",
       "filename": "out.log",
       "mode": "w"
     }
   },
   "loggers": {
+    "__main__": {},
+    "setups":{},
+    "start_ui":{},
+    "start_ui.base_ui":{},
+    "start_ui.cli":{}
   },
   "root": {
     "handlers": [

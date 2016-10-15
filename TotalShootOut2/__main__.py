@@ -25,6 +25,7 @@ def main():
         logging.getLogger(__name__).exception(
             "An exception has been raised from the game, and not stopped"
         )
+        raise
     finally:
         # stop the logging
         logging.getLogger(__name__).info("Logging End")
@@ -34,7 +35,7 @@ def main():
 
 
 def start_logging():
-    logging.basicConfig(level = logging.DEBUG)
+    logging.basicConfig(level = logging.INFO)
     #the logging will be finer after the setups will be read
 
 def set_pypath():
